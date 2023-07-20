@@ -12,6 +12,10 @@ public:
   void test();
 
 private:
+  void createWindow_();
+  void setupGL_();
+
+private:
   Display *dpy_;
   Window root_;
   GLint att_[5] = {GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None};

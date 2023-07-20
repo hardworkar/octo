@@ -1,11 +1,13 @@
 #include "application.h"
 #include "platform/x11/opengl_x11.h"
+#include <GL/glx.h>
 
 Application::Application() {
-  // create OpenGL context
   OpenGLX11 opengl;
 
-  // load OpenGL functions
+  while (1) {
+    opengl.test();
+  }
 }
 
 void Application::run() {}

@@ -1,7 +1,13 @@
 #include "opengl_x11.h"
+#include <GL/glext.h>
 #include <iostream>
 
 OpenGLX11::OpenGLX11() {
+  createWindow_();
+  setupGL_();
+}
+
+void OpenGLX11::createWindow_() {
   if ((dpy_ = XOpenDisplay(nullptr)) == nullptr) {
     std::cerr << "Failed to connect to X server\n";
     exit(-1);
@@ -24,30 +30,13 @@ OpenGLX11::OpenGLX11() {
                        vi_->visual, CWColormap | CWEventMask, &swa_);
   XMapWindow(dpy_, win_);
   XStoreName(dpy_, win_, "octo window!");
+}
 
+void OpenGLX11::setupGL_() {
   glc_ = glXCreateContext(dpy_, vi_, nullptr, GL_TRUE);
   glXMakeCurrent(dpy_, win_, glc_);
 
   glEnable(GL_DEPTH_TEST);
-
-  while (1) {
-    XNextEvent(dpy_, &xev_);
-
-    if (xev_.type == Expose) {
-      XGetWindowAttributes(dpy_, win_, &gwa_);
-      glViewport(0, 0, gwa_.width, gwa_.height);
-      test();
-      glXSwapBuffers(dpy_, win_);
-    }
-
-    else if (xev_.type == KeyPress) {
-      glXMakeCurrent(dpy_, None, nullptr);
-      glXDestroyContext(dpy_, glc_);
-      XDestroyWindow(dpy_, win_);
-      XCloseDisplay(dpy_);
-      exit(0);
-    }
-  }
 }
 
 void OpenGLX11::test() {
@@ -72,4 +61,6 @@ void OpenGLX11::test() {
   glColor3f(1., 1., 0.);
   glVertex3f(-.75, .75, 0.);
   glEnd();
+
+  glXSwapBuffers(dpy_, win_);
 }
