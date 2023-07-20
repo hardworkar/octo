@@ -1,0 +1,4 @@
+build/
+.cmake/
+src/.cache/
+src/compile_commands.json

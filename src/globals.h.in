@@ -1,0 +1,4 @@
+#pragma once
+
+#define OCTO_VERSION_MAJOR @octo_VERSION_MAJOR@
+#define OCTO_VERSION_MINOR @octo_VERSION_MINOR@
