@@ -5,3 +5,5 @@ This project is intended to draw stuff on screen using as few dependencies as po
 ## log
 
 - created a window containing a quad using Xlib & GLX following [this](https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib) guide.
+
+- switched to OpenGL3.0 context creation using [this](https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)). Turns out we need sth called 'Debug Context'.
