@@ -24,7 +24,7 @@ private:
   Colormap cmap_;
   XSetWindowAttributes swa_;
   Window win_;
-  GLXContext glc_;
+  GLXContext ctx_ = 0;
   XWindowAttributes gwa_;
   XEvent xev_;
 };

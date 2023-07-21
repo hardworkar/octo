@@ -1,18 +1,16 @@
 #pragma once
 #include <format>
 #include <iostream>
-#include <string>
+#include <source_location>
+#include <string_view>
 
 namespace octo {
-class Log {
-public:
-  static void info(std::string_view description) {
-    std::cout << std::format("INFO {}\n", description);
-  }
-  static void warn(std::string_view description) {
-    std::cerr << std::format("WARN {}\n", description);
-  }
-
-private:
-};
+enum class log_level : char { Info = 'I', Warning = 'W', Error = 'E' };
+inline void
+log(const log_level level, const std::string_view message,
+    const std::source_location location = std::source_location::current()) {
+  std::clog << "file: " << location.file_name() << '(' << location.line() << ':'
+            << location.column() << ") `" << location.function_name()
+            << "`: " << message << '\n';
+}
 } // namespace octo

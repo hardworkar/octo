@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-message("cxx compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
 
 configure_file(src/globals.h.in src/globals.h)
 
@@ -27,3 +26,5 @@ find_package(X11 REQUIRED)
 target_link_libraries(octo GL)
 target_link_libraries(octo GLU)
 target_link_libraries(octo X11)
+
+message("cxx compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
