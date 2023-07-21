@@ -6,6 +6,6 @@
 int main() {
   std::cout << "hello from octo version: " << OCTO_VERSION_MAJOR << "."
             << OCTO_VERSION_MINOR << "\n";
-  Application app;
+  octo::Application app;
   app.run();
 }

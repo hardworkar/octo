@@ -6,6 +6,7 @@
 #include <X11/X.h>
 #include <X11/Xlib.h>
 
+namespace octo {
 class OpenGLX11 {
 public:
   OpenGLX11();
@@ -27,3 +28,4 @@ private:
   XWindowAttributes gwa_;
   XEvent xev_;
 };
+} // namespace octo

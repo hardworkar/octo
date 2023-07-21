@@ -1,7 +1,8 @@
 #include "opengl_x11.h"
+#include "../../log.h"
 #include <GL/glext.h>
-#include <iostream>
 
+namespace octo {
 OpenGLX11::OpenGLX11() {
   createWindow_();
   setupGL_();
@@ -9,17 +10,17 @@ OpenGLX11::OpenGLX11() {
 
 void OpenGLX11::createWindow_() {
   if ((dpy_ = XOpenDisplay(nullptr)) == nullptr) {
-    std::cerr << "Failed to connect to X server\n";
+    Log::warn("Failed to connect to X server");
     exit(-1);
   }
 
   root_ = DefaultRootWindow(dpy_);
 
   if ((vi_ = glXChooseVisual(dpy_, 0, att_)) == nullptr) {
-    std::cerr << "No appropriate visual found\n";
+    Log::warn("No appropriate visual found");
     exit(-1);
   }
-  std::cout << "visual " << std::hex << vi_->visualid << " selected \n";
+  Log::info(std::format("visual {:x} selected", vi_->visualid));
 
   cmap_ = XCreateColormap(dpy_, root_, vi_->visual, AllocNone);
 
@@ -64,3 +65,4 @@ void OpenGLX11::test() {
 
   glXSwapBuffers(dpy_, win_);
 }
+} // namespace octo

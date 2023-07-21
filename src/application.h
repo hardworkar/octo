@@ -1,5 +1,6 @@
 #pragma once
 
+namespace octo {
 class Application {
 public:
   Application();
@@ -7,3 +8,4 @@ public:
 
 private:
 };
+} // namespace octo
