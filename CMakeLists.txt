@@ -3,9 +3,10 @@ cmake_minimum_required(VERSION 3.10)
 project(octo
     VERSION 0.1)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 
 
 configure_file(src/globals.h.in src/globals.h)

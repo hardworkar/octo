@@ -1,46 +1,18 @@
 #include "opengl_x11.h"
 #include "../../log.h"
 #include <GL/glext.h>
-#include <cstring>
+#include <regex>
 
 namespace octo {
 
-#define GLX_CONTEXT_MAJOR_VERSION_ARB 0x2091
-#define GLX_CONTEXT_MINOR_VERSION_ARB 0x2092
-typedef GLXContext (*glXCreateContextAttribsARBProc)(Display *, GLXFBConfig,
-                                                     GLXContext, Bool,
-                                                     const int *);
-
 // Helper to check for extension string presence.  Adapted from:
 // http://www.opengl.org/resources/features/OGLextensions/
-static bool isExtensionSupported(const char *extList, const char *extension) {
-  const char *start;
-  const char *where, *terminator;
-
-  /* Extension names should not have spaces. */
-  where = strchr(extension, ' ');
-  if (where || *extension == '\0')
+static bool isExtensionSupported(const std::string &extList,
+                                 const std::string &extension) {
+  if (extension.length() == 0 || extension.contains(' '))
     return false;
-
-  /* It takes a bit of care to be fool-proof about parsing the
-     OpenGL extensions string. Don't be fooled by sub-strings,
-     etc. */
-  for (start = extList;;) {
-    where = strstr(start, extension);
-
-    if (!where)
-      break;
-
-    terminator = where + strlen(extension);
-
-    if (where == start || *(where - 1) == ' ')
-      if (*terminator == ' ' || *terminator == '\0')
-        return true;
-
-    start = terminator;
-  }
-
-  return false;
+  const std::regex extRegex("\\b" + extension + "\\b");
+  return std::regex_search(extList, extRegex);
 }
 
 static bool ctxErrorOccurred = false;
@@ -150,9 +122,9 @@ void OpenGLX11::createWindow_() {
 
   // NOTE: It is not necessary to create or make current to a context before
   // calling glXGetProcAddressARB
-  glXCreateContextAttribsARBProc glXCreateContextAttribsARB = 0;
+  PFNGLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB = 0;
   glXCreateContextAttribsARB =
-      (glXCreateContextAttribsARBProc)glXGetProcAddressARB(
+      (PFNGLXCREATECONTEXTATTRIBSARBPROC)glXGetProcAddressARB(
           (const GLubyte *)"glXCreateContextAttribsARB");
 
   // Install an X error handler so the application won't exit if GL 3.0
@@ -178,7 +150,7 @@ void OpenGLX11::createWindow_() {
   else {
     int context_attribs[] = {GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
                              GLX_CONTEXT_MINOR_VERSION_ARB, 0,
-                             // GLX_CONTEXT_FLAGS_ARB        ,
+                             GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_DEBUG_BIT_ARB,
                              // GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
                              None};
 
