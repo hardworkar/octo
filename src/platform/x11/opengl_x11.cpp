@@ -1,7 +1,9 @@
 #include "opengl_x11.h"
 #include "../../log.h"
 #include <GL/glext.h>
+#include <X11/Xlib.h>
 #include <regex>
+#include <stdexcept>
 
 namespace octo {
 
@@ -22,13 +24,13 @@ static int ctxErrorHandler(Display *dpy, XErrorEvent *ev) {
 }
 
 OpenGLX11::OpenGLX11() {
-  createWindow_();
-  setupGL_();
+  create_window_();
+  setup_gl_();
 }
 
-void OpenGLX11::createWindow_() {
+void OpenGLX11::create_window_() {
   if ((dpy_ = XOpenDisplay(nullptr)) == nullptr) {
-    log(log_level::Error, "Failed to connect to X server");
+    throw std::runtime_error("Failed to connect to X server");
   }
   // Get a matching FB config
   static int visual_attribs[] = {
@@ -40,12 +42,10 @@ void OpenGLX11::createWindow_() {
       // GLX_SAMPLES         , 4,
       None};
 
-  int glx_major, glx_minor;
-
   // FBConfigs were added in GLX version 1.3.
-  if (!glXQueryVersion(dpy_, &glx_major, &glx_minor) ||
-      ((glx_major == 1) && (glx_minor < 3)) || (glx_major < 1)) {
-    log(log_level::Error, "Invalid GLX version");
+  if (!glXQueryVersion(dpy_, &glx_major_, &glx_minor_) ||
+      ((glx_major_ == 1) && (glx_minor_ < 3)) || (glx_major_ < 1)) {
+    throw std::runtime_error("Invalid GLX version");
   }
 
   log(log_level::Info, "Getting matching framebuffer configs");
@@ -53,7 +53,7 @@ void OpenGLX11::createWindow_() {
   GLXFBConfig *fbc =
       glXChooseFBConfig(dpy_, DefaultScreen(dpy_), visual_attribs, &fbcount);
   if (!fbc) {
-    log(log_level::Error, "Failed to retrieve a framebuffer config\n");
+    throw std::runtime_error("Failed to retrieve a framebuffer config");
   }
   log(log_level::Info, std::format("Found {} matching FB configs", fbcount));
 
@@ -105,7 +105,7 @@ void OpenGLX11::createWindow_() {
                        vi_->depth, InputOutput, vi_->visual,
                        CWBorderPixel | CWColormap | CWEventMask, &swa);
   if (!win_) {
-    log(log_level::Error, "Failed to create window.\n");
+    throw std::runtime_error("Failed to create window");
     exit(1);
   }
 
@@ -187,7 +187,7 @@ void OpenGLX11::createWindow_() {
   XSetErrorHandler(oldHandler);
 
   if (ctxErrorOccurred || !ctx_) {
-    log(log_level::Error, "Failed to create an OpenGL context");
+    throw std::runtime_error("Failed to create an OpenGL context");
     exit(-1);
   }
 
@@ -199,11 +199,13 @@ void OpenGLX11::createWindow_() {
   }
 }
 
-void OpenGLX11::setupGL_() {
+void OpenGLX11::setup_gl_() {
   glXMakeCurrent(dpy_, win_, ctx_);
 
   glEnable(GL_DEPTH_TEST);
 }
+
+OpenGLX11::~OpenGLX11() { XCloseDisplay(dpy_); }
 
 void OpenGLX11::test() {
   glClearColor(1.0, 1.0, 1.0, 1.0);

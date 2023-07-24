@@ -11,10 +11,11 @@ class OpenGLX11 {
 public:
   OpenGLX11();
   void test();
+  virtual ~OpenGLX11();
 
 private:
-  void createWindow_();
-  void setupGL_();
+  void create_window_();
+  void setup_gl_();
 
 private:
   Display *dpy_;
@@ -27,5 +28,8 @@ private:
   GLXContext ctx_ = 0;
   XWindowAttributes gwa_;
   XEvent xev_;
+
+  int glx_major_;
+  int glx_minor_;
 };
 } // namespace octo
