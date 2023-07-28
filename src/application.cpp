@@ -4,16 +4,13 @@
 #include <stdexcept>
 
 namespace octo {
-Application::Application() {
-  try {
-    OpenGLX11 opengl;
-    while (1) {
-      opengl.test();
-    }
-  } catch (const std::runtime_error &e) {
-    log(log_level::Error, e.what());
-  }
-}
+Application::Application() {}
 
-void Application::run() {}
+void Application::run() try {
+  while (1) {
+    opengl_x11_.test();
+  }
+} catch (const std::runtime_error &e) {
+  log(log_level::Error, e.what());
+}
 } // namespace octo

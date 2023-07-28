@@ -5,8 +5,22 @@
 #include <GL/glx.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
+#include <memory>
 
 namespace octo {
+
+// deleters
+inline void xCloseDisplay(Display *ptr) {
+  if (ptr) {
+    XCloseDisplay(ptr);
+  }
+}
+inline void xFree(void *ptr) {
+  if (ptr) {
+    XFree(ptr);
+  }
+}
+
 class OpenGLX11 {
 public:
   OpenGLX11();
@@ -15,13 +29,14 @@ public:
 
 private:
   void create_window_();
+  void create_context_();
   void setup_gl_();
 
 private:
   Display *dpy_;
-  Window root_;
-  GLint att_[5] = {GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None};
+  GLXFBConfig bestFbc_;
   XVisualInfo *vi_;
+  Window root_;
   Colormap cmap_;
   XSetWindowAttributes swa_;
   Window win_;

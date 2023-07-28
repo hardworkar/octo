@@ -26,7 +26,7 @@ inline void
 log(const log_level level, const std::string_view message,
     const std::source_location location = std::source_location::current()) {
   std::clog << get_random_face(level == log_level::Info) << " "
-            << "file: " << location.file_name() << '(' << location.line() << ':'
+            << location.file_name() << '(' << location.line() << ':'
             << location.column() << ") `" << location.function_name()
             << "`: " << message << "\n";
 }
