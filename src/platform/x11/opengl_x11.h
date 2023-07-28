@@ -9,18 +9,6 @@
 
 namespace octo {
 
-// deleters
-inline void xCloseDisplay(Display *ptr) {
-  if (ptr) {
-    XCloseDisplay(ptr);
-  }
-}
-inline void xFree(void *ptr) {
-  if (ptr) {
-    XFree(ptr);
-  }
-}
-
 class OpenGLX11 {
 public:
   OpenGLX11();
