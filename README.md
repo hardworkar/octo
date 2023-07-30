@@ -5,7 +5,8 @@ This project is intended to draw stuff on screen using as few dependencies as po
 ## build
 
 needs a compiler with some c++23 features supported: source_location (P1208R6), std::format (P0645R10).
-fine with clang++-16.
+
+tested fine with clang++-16.
 
 ## log
 
@@ -13,4 +14,6 @@ fine with clang++-16.
 
 - [21/07/23] switched to OpenGL3.0 context creation using [this](https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)). Turns out we need sth called 'Debug Context'.
 
-- [29/07/23] now we have a window using x11 only!
+- [29/07/23] now we have a window using x11 only! (oh poor glfw :D)
+
+- [30/07/23] opengl & glx functions loaded. switched to modern OpenGL 4.0+. (oh poor glad :D)
